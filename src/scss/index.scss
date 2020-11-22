@@ -1,0 +1,29 @@
+@mixin inset($spacing) {
+    top: $spacing;
+    right: $spacing;
+    bottom: $spacing;
+    left: $spacing;
+}
+
+.popmicro {
+    &__wrapper {
+        position: fixed;
+        background-color: rgba(0,0,0,0.5);
+        display: grid;
+        place-items: center;
+        @include inset(0);
+    }
+    &__close {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+    }
+    &__close:before {
+        content: 'close';
+    }
+
+    &__hide {
+        display: none !important;
+    }
+
+}
