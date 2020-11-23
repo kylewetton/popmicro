@@ -1,7 +1,14 @@
-import {createClassedElement, handleError, getHookType} from '../../utils';
+import {createClassedElement, handleError, getHookType, setShadowType} from '../../utils';
+
+interface SizingType {
+    width: string;
+    height?: string;
+}
 
 interface PopmicroSettings {
     element: string;
+    sizeType: 'full' | 'none' | SizingType;
+    dropShadow: string;
 }
 
 interface PopmicroScaffold {
@@ -19,6 +26,8 @@ type Triggers = NodeListOf<HTMLAnchorElement>;
 
 const defaults: PopmicroSettings = {
     element: '.popmicro',
+    sizeType: 'none',
+    dropShadow: 'xl'
 }
 
 export default class Popmicro {
@@ -56,10 +65,33 @@ export default class Popmicro {
     public open(hook: string) {
         const {main, inner} = this.scaffold;
         const hookType: string | null = getHookType(hook);
+
+        const getSizing = (element: HTMLElement) : {size: string; userContentSize: string;} => {
+            const {sizeType} = this.settings;
+            let size = '';
+            let userContentSize = 'height: 100%; width: 100%';
+            switch(true) {
+                default:
+                case (sizeType === 'full') :
+                    size = 'height: 100%; width: 100%';
+                break;
+                case (sizeType === 'none') :
+                    size = '';
+                break;
+                case (typeof sizeType === 'object' && sizeType.hasOwnProperty('width')) :
+                    size = `width: 100%; max-width: ${(sizeType as SizingType).width};`;
+                    if ((sizeType as SizingType).hasOwnProperty('height')) {
+                        size += `height: 100%; max-height: ${(sizeType as SizingType).height}`;
+                    }
+            }
+            
+            return {size, userContentSize};
+        }
         
 
         switch(hookType) {
             case 'image' :
+                
                 inner.innerHTML = `<img class="popmicro__direct-image" src="${hook}" />`
                 this.inlineDomPosition = null;
             break;
@@ -67,6 +99,7 @@ export default class Popmicro {
             case 'inline' :
                 const content: HTMLElement | null = document.querySelector(hook);
                 if (content) {
+                    const {size, userContentSize} = getSizing(content);
                     const parent = content.parentNode;
                     const nextSibling = content.nextElementSibling;
 
@@ -74,6 +107,9 @@ export default class Popmicro {
                         parent,
                         sibling: nextSibling,
                     }
+
+                    content.style.cssText += userContentSize;
+                   (inner as HTMLElement).style.cssText = size;
 
                    inner.innerHTML = '';
                    inner.appendChild(content);
@@ -108,6 +144,7 @@ export default class Popmicro {
             inner.innerHTML = '';
         }
         document.body.removeChild(main);
+        (inner as HTMLElement).style.cssText = '';
         this.inlineDomPosition = null;
     }
 
@@ -115,6 +152,9 @@ export default class Popmicro {
 
 
     private addEvents() {
+
+        this.scaffold.close.addEventListener('click', () => this.close())
+        
         if (!this.triggers.length)
             return;
         this.triggers.forEach(trigger => {
@@ -131,6 +171,7 @@ export default class Popmicro {
 
     private scaffoldHTML() {
         const {main, inner, close} = this.scaffold;
+        setShadowType(this.settings.dropShadow);
         main.append(close, inner);
     }
 

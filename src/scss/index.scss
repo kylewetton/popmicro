@@ -5,13 +5,29 @@
     left: $spacing;
 }
 
+:root {
+    --popmicro-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); 
+}
+
+
 .popmicro {
     &__wrapper {
+        box-sizing: border-box;
         position: fixed;
         background-color: rgba(0,0,0,0.5);
         display: grid;
         place-items: center;
+        padding: 4rem;
         @include inset(0);
+
+    }
+    &__inner {
+        box-sizing: border-box;
+        position: relative;
+        box-shadow: var(--popmicro-shadow);
+    }
+    &__inner > * {
+        box-sizing: border-box;
     }
     &__close {
         position: absolute;
