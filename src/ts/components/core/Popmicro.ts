@@ -1,14 +1,13 @@
-import {createClassedElement, handleError, getHookType, setShadowType} from '../../utils';
-
-interface SizingType {
-    width: string;
-    height?: string;
-}
+import {createClassedElement, handleError, getHookType, getSizing, setShadowType, SizeType} from '../../utils';
+import {CloseButton} from '../ui';
+import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 
 interface PopmicroSettings {
     element: string;
-    sizeType: 'full' | 'none' | SizingType;
+    sizeType: SizeType;
     dropShadow: string;
+    bgOpacity: number;
+    lockScrolling: boolean;
 }
 
 interface PopmicroScaffold {
@@ -27,7 +26,9 @@ type Triggers = NodeListOf<HTMLAnchorElement>;
 const defaults: PopmicroSettings = {
     element: '.popmicro',
     sizeType: 'none',
-    dropShadow: 'xl'
+    dropShadow: 'xl',
+    bgOpacity: 0.8,
+    lockScrolling: true,
 }
 
 export default class Popmicro {
@@ -63,30 +64,12 @@ export default class Popmicro {
 
 
     public open(hook: string) {
+        const {lockScrolling} = this.settings;
         const {main, inner} = this.scaffold;
         const hookType: string | null = getHookType(hook);
 
-        const getSizing = (element: HTMLElement) : {size: string; userContentSize: string;} => {
-            const {sizeType} = this.settings;
-            let size = '';
-            let userContentSize = 'height: 100%; width: 100%';
-            switch(true) {
-                default:
-                case (sizeType === 'full') :
-                    size = 'height: 100%; width: 100%';
-                break;
-                case (sizeType === 'none') :
-                    size = '';
-                break;
-                case (typeof sizeType === 'object' && sizeType.hasOwnProperty('width')) :
-                    size = `width: 100%; max-width: ${(sizeType as SizingType).width};`;
-                    if ((sizeType as SizingType).hasOwnProperty('height')) {
-                        size += `height: 100%; max-height: ${(sizeType as SizingType).height}`;
-                    }
-            }
-            
-            return {size, userContentSize};
-        }
+        if (lockScrolling)
+            disableBodyScroll(inner);
         
 
         switch(hookType) {
@@ -99,7 +82,7 @@ export default class Popmicro {
             case 'inline' :
                 const content: HTMLElement | null = document.querySelector(hook);
                 if (content) {
-                    const {size, userContentSize} = getSizing(content);
+                    const {size, userContentSize} = getSizing(content, this.settings.sizeType);
                     const parent = content.parentNode;
                     const nextSibling = content.nextElementSibling;
 
@@ -128,7 +111,11 @@ export default class Popmicro {
 
     public close() {
         const {main, inner} = this.scaffold;
+        const {lockScrolling} = this.settings;
         const content = inner.querySelector(':scope > *');
+
+        if (lockScrolling)
+            enableBodyScroll(inner);
 
         if (content) {
             if (!content.classList.contains('popmicro__direct-image')) {
@@ -171,7 +158,11 @@ export default class Popmicro {
 
     private scaffoldHTML() {
         const {main, inner, close} = this.scaffold;
+        const root = document.documentElement;
+
         setShadowType(this.settings.dropShadow);
+        root.style.setProperty('--popmicro-bg-opacity', `${this.settings.bgOpacity}`);
+        close.innerHTML = CloseButton();
         main.append(close, inner);
     }
 

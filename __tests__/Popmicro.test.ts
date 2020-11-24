@@ -67,15 +67,6 @@ describe('Open method', () => {
 describe('Close method', () => {
     const popmicro = new Popmicro();
 
-    it('Moves the out of the DOM and into the modal, and moves it back in place', () => {
-        popmicro.open('#content');
-
-        expect(document.body.innerHTML).not.toBe(markup);
-        expect(popmicro.scaffold.inner.innerHTML).toMatch(/id="content"/);
-        popmicro.close();
-        expect(document.body.innerHTML.replace(/\s/g, '')).toBe(markup.replace(/\s/g, ''));
-    });
-
     it('Opening removes the hide class', () => {
         const c = document.getElementById('content');
         popmicro.open('#content');

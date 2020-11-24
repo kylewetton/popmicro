@@ -9,6 +9,14 @@ interface CreateClassedElementFn {
 
 type PossibleHooks = 'image' | 'inline' | 'video' | null;
 
+interface CustomSizeType {
+    width: string;
+    height?: string;
+}
+
+export type SizeType = 'full' | 'none' | CustomSizeType;
+
+
 /**
  * An error handling utility that checks viability of entity
  * This either throws an error when soft is false
@@ -106,4 +114,32 @@ export const setShadowType = (size: string = 'xl') => {
 
     root.style.setProperty('--popmicro-shadow', boxShadow);
 
+}
+
+/**
+ * Gets inline CSS based on the sizing type chosen. Either full width, a custom height/width, or none.
+ * 
+ * @param element       (private) popmicro__inner
+ * @param sizeType      'none' (default) | 'full' | {width, height}
+ */
+
+export const getSizing = (element: HTMLElement, sizeType: SizeType) : {size: string; userContentSize: string;} => {
+    let size = '';
+    let userContentSize = 'min-height: 100%; width: 100%';
+    switch(true) {
+        default:
+        case (sizeType === 'full') :
+            size = 'overflow-y: auto; height: 100%; width: 100%';
+        break;
+        case (sizeType === 'none') :
+            size = '';
+        break;
+        case (typeof sizeType === 'object' && sizeType.hasOwnProperty('width')) :
+            size = `width: 100%; max-width: ${(sizeType as CustomSizeType).width};`;
+            if ((sizeType as CustomSizeType).hasOwnProperty('height')) {
+                size += `overflow-y: auto; height: 100%; max-height: ${(sizeType as CustomSizeType).height}`;
+            }
+    }
+    
+    return {size, userContentSize};
 }
