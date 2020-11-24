@@ -1,8 +1,9 @@
 {
   "name": "popmicro",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "",
-  "main": "./dist/popmicro.js",
+  "main": "dist/popmicro.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "NODE_ENV=production webpack --watch --mode production  --colors",
     "test": "jest --coverage",
