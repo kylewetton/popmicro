@@ -143,6 +143,11 @@ export default class Popmicro {
     private addEvents() {
 
         this.scaffold.close.addEventListener('click', () => this.close())
+        this.scaffold.main.addEventListener('click', (e) => {
+            if ((e.target as HTMLElement) === this.scaffold.main) {
+                this.close();
+            }
+        });
         
         if (!this.triggers.length)
             return;

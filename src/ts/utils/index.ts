@@ -14,7 +14,7 @@ interface CustomSizeType {
     height?: string;
 }
 
-export type SizeType = 'full' | 'none' | CustomSizeType;
+export type SizeType = 'full' | 'none' | CustomSizeType | undefined;
 
 
 /**
