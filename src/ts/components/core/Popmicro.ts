@@ -3,12 +3,12 @@ import {CloseButton} from '../ui';
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 
 interface PopmicroSettings {
-    element: string;
-    sizeType: SizeType;
-    dropShadow: string;
-    bgOpacity: number;
-    lockScrolling: boolean;
-    hideCloseButton: boolean;
+    element?: string;
+    sizeType?: SizeType;
+    dropShadow?: string;
+    bgOpacity?: number;
+    lockScrolling?: boolean;
+    hideCloseButton?: boolean;
 }
 
 interface PopmicroScaffold {

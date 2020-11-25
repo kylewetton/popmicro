@@ -1,6 +1,6 @@
 {
   "name": "popmicro",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "",
   "main": "dist/popmicro.js",
   "types": "dist/index.d.ts",
