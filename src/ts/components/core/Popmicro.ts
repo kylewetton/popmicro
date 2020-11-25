@@ -147,7 +147,7 @@ export default class Popmicro {
         this.triggers.forEach(trigger => {
             trigger.addEventListener('click', e => {
                 e.preventDefault();
-                const t = e.target as HTMLAnchorElement;
+                const t = e.currentTarget as HTMLAnchorElement;
                 const href = t.getAttribute('href');
                 href && this.open(href);
             })

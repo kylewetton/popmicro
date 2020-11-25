@@ -13,6 +13,7 @@
 
 .popmicro {
     &__wrapper {
+        z-index: 9999;
         box-sizing: border-box;
         position: fixed;
         background-color: rgba(0,0,0, var(--popmicro-bg-opacity));
