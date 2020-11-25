@@ -8,6 +8,7 @@ interface PopmicroSettings {
     dropShadow: string;
     bgOpacity: number;
     lockScrolling: boolean;
+    hideCloseButton: boolean;
 }
 
 interface PopmicroScaffold {
@@ -29,6 +30,7 @@ const defaults: PopmicroSettings = {
     dropShadow: 'xl',
     bgOpacity: 0.8,
     lockScrolling: true,
+    hideCloseButton: false
 }
 
 export default class Popmicro {
@@ -43,7 +45,7 @@ export default class Popmicro {
         this.scaffold = {
             main: createClassedElement('div', 'popmicro__wrapper'),
             inner: createClassedElement('div', 'popmicro__inner'),
-            close: createClassedElement('button', 'popmicro__close'),
+            close: createClassedElement('button', this.settings.hideCloseButton ? ['popmicro__hide', 'popmicro__close'] : 'popmicro__close'),
         };
         this.inlineDomPosition = null;
         this.mount();
