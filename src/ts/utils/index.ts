@@ -89,27 +89,27 @@ export const setShadowType = (size: string = 'xl') => {
 
     switch(size) {
         case('none'):
-        boxShadow = 'none';
+            boxShadow = 'none';
         break;
 
         case('sm'):
-        boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)';
+            boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)';
         break;
         
         case('md'):
-        boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)';
+            boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)';
         break;
 
         case('lg'):
-        boxShadow = '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)';
+            boxShadow = '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)';
         break;
 
         case('xl') :
-        boxShadow = '0 25px 50px -12px rgba(0, 0, 0, 0.25)';
+            boxShadow = '0 25px 50px -12px rgba(0, 0, 0, 0.25)';
         break;
 
         default:
-        boxShadow = size;
+            boxShadow = size;
     }
 
     root.style.setProperty('--popmicro-shadow', boxShadow);
@@ -127,12 +127,13 @@ export const getSizing = (element: HTMLElement, sizeType: SizeType) : {size: str
     let size = '';
     let userContentSize = 'min-height: 100%; width: 100%';
     switch(true) {
-        default:
         case (sizeType === 'full') :
             size = 'overflow-y: auto; height: 100%; width: 100%';
         break;
+        default:
         case (sizeType === 'none') :
             size = '';
+            userContentSize = '';
         break;
         case (typeof sizeType === 'object' && sizeType.hasOwnProperty('width')) :
             size = `width: 100%; max-width: ${(sizeType as CustomSizeType).width};`;
